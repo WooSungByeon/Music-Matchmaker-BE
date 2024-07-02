@@ -13,7 +13,7 @@ public class TestDAO {
     @Autowired
     private SqlSession sqlSession;
 
-    private final String nameSpace = "com.wos.baseproject.api.dao.TestDAO.";
+    private final String nameSpace = "com.wos.musicMatchmaker.api.dao.TestDAO.";
 
     public List<Map<String, Object>> selectSampleData() {
         return this.sqlSession.selectList(nameSpace + "selectSampleData");

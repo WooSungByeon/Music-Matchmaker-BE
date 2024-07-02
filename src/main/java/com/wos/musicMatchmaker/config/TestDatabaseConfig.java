@@ -40,7 +40,7 @@ public class TestDatabaseConfig {
 
         bean.setDataSource(dataSource);
         bean.setMapperLocations(applicationContext.getResources("classpath:/mapper/**/*.xml"));
-        bean.setTypeAliasesPackage("com.wos.baseproject");
+        bean.setTypeAliasesPackage("com.wos.musicMatchmaker");
 
         return bean.getObject();
     }
