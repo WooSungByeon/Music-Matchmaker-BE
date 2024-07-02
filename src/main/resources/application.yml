@@ -1,0 +1,33 @@
+spring:
+  application:
+    name : BaseProject
+  #### DB Config ####
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/test_db
+      username: db_user
+      password: db_pw
+      pool-name: TestHikariPool
+      maximum-pool-size: 5
+
+#### SERVER Config ####
+server:
+  port: 17777
+  servlet:
+    context-path: /yourPath/api
+
+logging:
+  file:
+    path: C:/web-develop/springBoot/log
+  level:
+    root: info
+    com :
+      wos : info
+
+#p6spy query logging
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+
