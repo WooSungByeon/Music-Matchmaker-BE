@@ -1,6 +1,6 @@
-package com.wos.baseproject.api.service;
+package com.wos.musicMatchmaker.api.service;
 
-import com.wos.baseproject.api.dao.TestDAO;
+import com.wos.musicMatchmaker.api.dao.TestDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

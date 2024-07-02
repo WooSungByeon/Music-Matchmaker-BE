@@ -1,4 +1,4 @@
-package com.wos.baseproject.config;
+package com.wos.musicMatchmaker.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

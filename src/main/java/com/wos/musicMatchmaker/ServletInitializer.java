@@ -1,4 +1,4 @@
-package com.wos.baseproject;
+package com.wos.musicMatchmaker;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

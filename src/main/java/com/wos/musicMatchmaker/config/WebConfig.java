@@ -1,4 +1,4 @@
-package com.wos.baseproject.config;
+package com.wos.musicMatchmaker.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

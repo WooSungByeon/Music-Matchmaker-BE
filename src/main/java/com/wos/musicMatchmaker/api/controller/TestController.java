@@ -1,7 +1,7 @@
-package com.wos.baseproject.api.controller;
+package com.wos.musicMatchmaker.api.controller;
 
 
-import com.wos.baseproject.api.service.TestService;
+import com.wos.musicMatchmaker.api.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
