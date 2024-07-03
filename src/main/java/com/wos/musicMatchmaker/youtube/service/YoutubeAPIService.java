@@ -22,7 +22,7 @@ public class YoutubeAPIService {
     private final String YOUTUBE_API_URL = "https://youtube.googleapis.com/youtube";
     private final String YOUTUBE_VIDEO_URL = "https://www.youtube.com/watch?v=";
     private final String YOUTUBE_VIDEO_MAX_CNT = "6";
-    private final String YOUTUBE_VIDEO_ORDER = "viewCount";
+    private final String YOUTUBE_VIDEO_ORDER = "relevance";
 
     @Value("${YOUTUBE_API_KEY}")
     private String YOUTUBE_API_KEY;
