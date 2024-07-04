@@ -6,7 +6,9 @@ import com.wos.musicMatchmaker.spotify.dto.SpotifyRcmDTO;
 import com.wos.musicMatchmaker.spotify.dto.SpotifySearchDTO;
 import com.wos.musicMatchmaker.spotify.service.SpotifyAPIService;
 import com.wos.musicMatchmaker.spotify.vo.SpotifyAuthVO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +17,11 @@ public class SpotifyAPIController {
 
     @Autowired
     private SpotifyAPIService spotifyAPIService;
+
+    @Scheduled(cron = "${job.quartz.token-refresh}", zone = "Asia/Seoul")
+    public void getSpotifyRefreshAccessTokenSchedule() {
+        spotifyAPIService.getSpotifyRefreshAccessTokenSchedule();
+    }
 
     /**
      * Get Spofity API Token

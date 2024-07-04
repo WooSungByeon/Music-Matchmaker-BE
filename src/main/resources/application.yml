@@ -11,6 +11,10 @@ spring:
       pool-name: HikariPoolConnection
       maximum-pool-size: 5
 
+job:
+  quartz:
+    token-refresh: 0 0/50 * * * *
+
 #### SERVER Config ####
 server:
   port: 17777

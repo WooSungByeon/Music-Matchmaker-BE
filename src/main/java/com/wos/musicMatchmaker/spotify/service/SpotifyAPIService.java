@@ -7,6 +7,7 @@ import com.wos.musicMatchmaker.spotify.dto.SpotifyAuthDTO;
 import com.wos.musicMatchmaker.spotify.dto.SpotifyRcmDTO;
 import com.wos.musicMatchmaker.spotify.dto.SpotifySearchDTO;
 import com.wos.musicMatchmaker.spotify.vo.SpotifyAuthVO;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.json.JSONObject;
@@ -19,6 +20,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class SpotifyAPIService {
 
     private final String SPOTIFY_TOKEN_API_URL = "https://accounts.spotify.com";
@@ -32,6 +34,33 @@ public class SpotifyAPIService {
 
     @Value("${SPOTIFY_CLIENT_SECRET}")
     private String SPOTIFY_CLIENT_SECRET;
+
+
+    /**
+     *  Token Refresh
+     */
+    public void getSpotifyRefreshAccessTokenSchedule() {
+        String spotifyTokenUrl = SPOTIFY_TOKEN_API_URL + "/api/token";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "client_credentials");
+        body.add("client_id", SPOTIFY_CLIENT_ID);
+        body.add("client_secret", SPOTIFY_CLIENT_SECRET);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        try{
+            ResponseEntity<String> response = restTemplate.exchange(spotifyTokenUrl, HttpMethod.POST, request, String.class);
+            ObjectMapper mapper = new ObjectMapper();
+            SpotifyAuthVO spotifyAuthVO = mapper.readValue(response.getBody(), SpotifyAuthVO.class);
+            SingletonVOconfig.INSTANCE.getInstance().setSpotifyAuthConfig(SPOTIFY_CLIENT_ID, spotifyAuthVO);
+            log.info("getSpotifyRefreshAccessTokenSchedule SUCCESS");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
 
     /**
      * Get Spofity API Token
