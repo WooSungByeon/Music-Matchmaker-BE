@@ -64,8 +64,8 @@ public class SpotifyAPIController {
      * @return
      */
     @RequestMapping(value = "/recommendTrackList", method = {RequestMethod.POST})
-    public ResponseEntity<?> recommendTrackList(@RequestBody SpotifyRcmDTO spotifyRcmDTO) {
-      return spotifyAPIService.recommendTrackList(spotifyRcmDTO);
+    public ResponseEntity<?> recommendTrackList(HttpServletRequest httpServletRequest, @RequestBody SpotifyRcmDTO spotifyRcmDTO) {
+      return spotifyAPIService.recommendTrackList(httpServletRequest, spotifyRcmDTO);
     }
 
 }

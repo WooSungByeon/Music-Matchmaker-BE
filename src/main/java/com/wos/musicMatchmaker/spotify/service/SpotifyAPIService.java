@@ -2,11 +2,14 @@ package com.wos.musicMatchmaker.spotify.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wos.musicMatchmaker.common.util.RandomKeyGenerator;
 import com.wos.musicMatchmaker.config.SingletonVOconfig;
+import com.wos.musicMatchmaker.spotify.dao.SpotifyAPIDAO;
 import com.wos.musicMatchmaker.spotify.dto.SpotifyAuthDTO;
 import com.wos.musicMatchmaker.spotify.dto.SpotifyRcmDTO;
 import com.wos.musicMatchmaker.spotify.dto.SpotifySearchDTO;
 import com.wos.musicMatchmaker.spotify.vo.SpotifyAuthVO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +22,18 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @Slf4j
 public class SpotifyAPIService {
 
     private final String SPOTIFY_TOKEN_API_URL = "https://accounts.spotify.com";
     private final String SPOTIFY_API_URL = "https://api.spotify.com";
+
+    @Autowired
+    private SpotifyAPIDAO spotifyAPIDAO;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -187,10 +196,26 @@ public class SpotifyAPIService {
      * @param spotifyRcmDTO
      * @return
      */
-    public ResponseEntity<?> recommendTrackList(SpotifyRcmDTO spotifyRcmDTO) {
+    public ResponseEntity<?> recommendTrackList(HttpServletRequest httpServletRequest, SpotifyRcmDTO spotifyRcmDTO) {
         JSONArray resultObject = new JSONArray();
 
         SpotifyAuthVO spotifyAuthVO = this.useSpotifyAccessToken();
+
+        try {
+            Map<String, Object> params = new HashMap<>();
+            String ipAddress = httpServletRequest.getRemoteAddr();
+            String hisSeq = RandomKeyGenerator.generateRandomKey("HIS_");
+            params.put("hisSeq", hisSeq);
+            params.put("trackTitle", spotifyRcmDTO.getTrackTitle());
+            params.put("trackId", spotifyRcmDTO.getTrackId());
+            params.put("artistsId", spotifyRcmDTO.getArtistsId());
+            params.put("artistsName", spotifyRcmDTO.getArtistsName());
+            params.put("nationalCode", spotifyRcmDTO.getMarket());
+            params.put("regIp", ipAddress);
+            Integer result = spotifyAPIDAO.insertTrackSearchHistory(params);
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
 
         String spotifyApiUrl = SPOTIFY_API_URL + "/v1/recommendations"
                 + "?seed_artists=" + spotifyRcmDTO.getArtistsId()

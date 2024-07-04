@@ -10,7 +10,9 @@ import org.json.JSONPropertyName;
 public class SpotifyRcmDTO {
 
     private String trackId;
+    private String trackTitle;
     private String artistsId;
+    private String artistsName;
     private String market;
     private String limit;
     private String seedGenres;
