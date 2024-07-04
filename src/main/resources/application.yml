@@ -31,3 +31,5 @@ decorator:
     p6spy:
       enable-logging: true
 
+env:
+  dir: YOUR .env file dir
