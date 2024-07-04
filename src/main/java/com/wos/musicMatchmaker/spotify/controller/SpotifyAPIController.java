@@ -8,6 +8,7 @@ import com.wos.musicMatchmaker.spotify.service.SpotifyAPIService;
 import com.wos.musicMatchmaker.spotify.vo.SpotifyAuthVO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class SpotifyAPIController {
      * @return
      */
     @RequestMapping(value = "/getSpotifyAccessToken", method = {RequestMethod.POST})
-    public Object getSpotifyAccessToken(@RequestBody SpotifyAuthDTO spotifyAuthDTO) {
+    public ResponseEntity<?> getSpotifyAccessToken(@RequestBody SpotifyAuthDTO spotifyAuthDTO) {
         return spotifyAPIService.getSpotifyAccessToken(spotifyAuthDTO);
     }
 
@@ -39,7 +40,7 @@ public class SpotifyAPIController {
      * @return
      */
     @RequestMapping(value = "/getSaveSpotifyAccessToken", method = {RequestMethod.POST})
-    public SpotifyAuthVO getSaveSpotifyAccessToken(@RequestBody SpotifyAuthDTO spotifyAuthDTO) {
+    public ResponseEntity<?>  getSaveSpotifyAccessToken(@RequestBody SpotifyAuthDTO spotifyAuthDTO) {
         return spotifyAPIService.getSaveSpotifyAccessToken(spotifyAuthDTO);
     }
 
@@ -51,7 +52,7 @@ public class SpotifyAPIController {
      * @return
      */
     @RequestMapping(value = "/searchTrackList", method = {RequestMethod.POST})
-    public Object searchTrackList(@RequestBody SpotifySearchDTO spotifySearchDTO) {
+    public ResponseEntity<?> searchTrackList(@RequestBody SpotifySearchDTO spotifySearchDTO) {
         return spotifyAPIService.searchTrackList(spotifySearchDTO);
     }
 
@@ -63,7 +64,7 @@ public class SpotifyAPIController {
      * @return
      */
     @RequestMapping(value = "/recommendTrackList", method = {RequestMethod.POST})
-    public Object recommendTrackList(@RequestBody SpotifyRcmDTO spotifyRcmDTO) {
+    public ResponseEntity<?> recommendTrackList(@RequestBody SpotifyRcmDTO spotifyRcmDTO) {
       return spotifyAPIService.recommendTrackList(spotifyRcmDTO);
     }
 

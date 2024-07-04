@@ -63,12 +63,29 @@ public class SpotifyAPIService {
     }
 
     /**
+     * Get the created Spotify API token
+     * @return
+     */
+    private SpotifyAuthVO useSpotifyAccessToken() {
+        SpotifyAuthVO spotifyAuthVO = SingletonVOconfig.INSTANCE.getInstance().getSpotifyAuthConfig(SPOTIFY_CLIENT_ID);
+        if(spotifyAuthVO == null) {
+            SpotifyAuthDTO spotifyAuthDTO = new SpotifyAuthDTO();
+            spotifyAuthDTO.setGrantType("client_credentials");
+            spotifyAuthDTO.setClientId(SPOTIFY_CLIENT_ID);
+            spotifyAuthDTO.setClientSecret(SPOTIFY_CLIENT_SECRET);
+            this.getSpotifyAccessToken(spotifyAuthDTO);
+            spotifyAuthVO = SingletonVOconfig.INSTANCE.getInstance().getSpotifyAuthConfig(SPOTIFY_CLIENT_ID);
+        }
+        return spotifyAuthVO;
+    }
+
+    /**
      * Get Spofity API Token
      * 
      * @param spotifyAuthDTO
      * @return
      */
-    public Object getSpotifyAccessToken(SpotifyAuthDTO spotifyAuthDTO) {
+    public ResponseEntity<?> getSpotifyAccessToken(SpotifyAuthDTO spotifyAuthDTO) {
         JSONArray resultObject = new JSONArray();
         SpotifyAuthVO spotifyAuthVO = null;
 
@@ -88,20 +105,15 @@ public class SpotifyAPIService {
 
             ObjectMapper mapper = new ObjectMapper();
             spotifyAuthVO = mapper.readValue(response.getBody(), SpotifyAuthVO.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                resultObject.put("Invalid access token");
-            } else {
-                resultObject.put("API Connect Error : " + e.getMessage());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resultObject.put("An unexpected error occurred.");
-        }
+            SingletonVOconfig.INSTANCE.getInstance().setSpotifyAuthConfig(SPOTIFY_CLIENT_ID, spotifyAuthVO);
+            resultObject.put("Get Token Success");
 
-        SingletonVOconfig.INSTANCE.getInstance().setSpotifyAuthConfig(SPOTIFY_CLIENT_ID, spotifyAuthVO);
-        resultObject.put("Get Token Success");
-        return resultObject.toString();
+            return new ResponseEntity<>(resultObject.toString(), HttpStatus.OK);
+        } catch (HttpClientErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -111,8 +123,8 @@ public class SpotifyAPIService {
      * @param spotifyAuthDTO
      * @return
      */
-    public SpotifyAuthVO getSaveSpotifyAccessToken(SpotifyAuthDTO spotifyAuthDTO) {
-        return SingletonVOconfig.INSTANCE.getInstance().getSpotifyAuthConfig(spotifyAuthDTO.getClientId());
+    public ResponseEntity<?>  getSaveSpotifyAccessToken(SpotifyAuthDTO spotifyAuthDTO) {
+        return new ResponseEntity<>(SingletonVOconfig.INSTANCE.getInstance().getSpotifyAuthConfig(spotifyAuthDTO.getClientId()), HttpStatus.OK);
     }
 
     /**
@@ -122,18 +134,10 @@ public class SpotifyAPIService {
      * @param spotifySearchDTO
      * @return
      */
-    public Object searchTrackList(SpotifySearchDTO spotifySearchDTO) {
+    public ResponseEntity<?> searchTrackList(SpotifySearchDTO spotifySearchDTO) {
         JSONArray resultObject = new JSONArray();
 
-        SpotifyAuthVO spotifyAuthVO = SingletonVOconfig.INSTANCE.getInstance().getSpotifyAuthConfig(SPOTIFY_CLIENT_ID);
-        if(spotifyAuthVO == null) {
-            SpotifyAuthDTO spotifyAuthDTO = new SpotifyAuthDTO();
-            spotifyAuthDTO.setGrantType("client_credentials");
-            spotifyAuthDTO.setClientId(SPOTIFY_CLIENT_ID);
-            spotifyAuthDTO.setClientSecret(SPOTIFY_CLIENT_SECRET);
-            this.getSpotifyAccessToken(spotifyAuthDTO);
-            spotifyAuthVO = SingletonVOconfig.INSTANCE.getInstance().getSpotifyAuthConfig(SPOTIFY_CLIENT_ID);
-        }
+        SpotifyAuthVO spotifyAuthVO = this.useSpotifyAccessToken();
 
         String spotifyApiUrl = SPOTIFY_API_URL + "/v1/search"
                 + "?q=" + spotifySearchDTO.getSearchWord()
@@ -168,18 +172,12 @@ public class SpotifyAPIService {
                 tempObject.put("track_url", jsonList.get(i).get("external_urls").get("spotify").asText());
                 resultObject.put(tempObject);
             }
+            return new ResponseEntity<>(resultObject.toString(), HttpStatus.OK);
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                resultObject.put("Invalid access token");
-            } else {
-                resultObject.put("API Connect Error : " + e.getMessage());
-            }
+            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
         } catch (Exception e) {
-            e.printStackTrace();
-            resultObject.put("An unexpected error occurred.");
+            return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return resultObject.toString();
     }
 
     /**
@@ -189,18 +187,10 @@ public class SpotifyAPIService {
      * @param spotifyRcmDTO
      * @return
      */
-    public Object recommendTrackList(SpotifyRcmDTO spotifyRcmDTO) {
+    public ResponseEntity<?> recommendTrackList(SpotifyRcmDTO spotifyRcmDTO) {
         JSONArray resultObject = new JSONArray();
 
-        SpotifyAuthVO spotifyAuthVO = SingletonVOconfig.INSTANCE.getInstance().getSpotifyAuthConfig(SPOTIFY_CLIENT_ID);
-        if(spotifyAuthVO == null) {
-            SpotifyAuthDTO spotifyAuthDTO = new SpotifyAuthDTO();
-            spotifyAuthDTO.setGrantType("client_credentials");
-            spotifyAuthDTO.setClientId(SPOTIFY_CLIENT_ID);
-            spotifyAuthDTO.setClientSecret(SPOTIFY_CLIENT_SECRET);
-            this.getSpotifyAccessToken(spotifyAuthDTO);
-            spotifyAuthVO = SingletonVOconfig.INSTANCE.getInstance().getSpotifyAuthConfig(SPOTIFY_CLIENT_ID);
-        }
+        SpotifyAuthVO spotifyAuthVO = this.useSpotifyAccessToken();
 
         String spotifyApiUrl = SPOTIFY_API_URL + "/v1/recommendations"
                 + "?seed_artists=" + spotifyRcmDTO.getArtistsId()
@@ -236,18 +226,12 @@ public class SpotifyAPIService {
                    resultObject.put(tempObject);
                }
             }
+            return new ResponseEntity<>(resultObject.toString(), HttpStatus.OK);
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                resultObject.put("Invalid access token");
-            } else {
-                resultObject.put("API Connect Error : " + e.getMessage());
-            }
+            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
         } catch (Exception e) {
-            e.printStackTrace();
-            resultObject.put("An unexpected error occurred.");
+            return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return resultObject.toString();
     }
 
 }

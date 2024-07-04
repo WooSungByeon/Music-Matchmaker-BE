@@ -33,7 +33,7 @@ public class YoutubeAPIService {
      * @param youtubeSearchDTO
      * @return
      */
-    public Object searchYoutubeList(YoutubeSearchDTO youtubeSearchDTO) {
+    public ResponseEntity<?> searchYoutubeList(YoutubeSearchDTO youtubeSearchDTO) {
 
         JSONArray resultObject = new JSONArray();
 
@@ -67,18 +67,12 @@ public class YoutubeAPIService {
                 tempObject.put("thumbnailsLink", jsonList.get(i).get("snippet").get("thumbnails").get("high").get("url").asText());
                 resultObject.put(tempObject);
             }
+            return new ResponseEntity<>(resultObject.toString(), HttpStatus.OK);
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                resultObject.put("Invalid access token");
-            } else {
-                resultObject.put("API Connect Error : " + e.getMessage());
-            }
+            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
         } catch (Exception e) {
-            e.printStackTrace();
-            resultObject.put("An unexpected error occurred.");
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        System.out.println(resultObject);
-        return resultObject.toString();
     }
 
 }
