@@ -43,6 +43,7 @@ public class YoutubeAPIService {
                 + "&q=" + youtubeSearchDTO.getSearchWord()
                 + "&maxResults=" + YOUTUBE_VIDEO_MAX_CNT
                 + "&order=" + YOUTUBE_VIDEO_ORDER
+                + "&type=" + "video"
         ;
 
         HttpHeaders headers = new HttpHeaders();
