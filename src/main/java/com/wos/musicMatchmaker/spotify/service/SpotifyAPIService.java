@@ -175,9 +175,9 @@ public class SpotifyAPIService {
                 JSONObject tempObject = new JSONObject();
                 tempObject.put("track", jsonList.get(i).get("name").asText());
                 tempObject.put("track_id", jsonList.get(i).get("id").asText());
-                tempObject.put("artists", jsonList.get(i).get("artists").get(0).get("name").asText());
-                tempObject.put("artists_id", jsonList.get(i).get("artists").get(0).get("id").asText());
-                tempObject.put("track_img", jsonList.get(i).get("album").get("images").get(2).get("url").asText());
+                tempObject.put("artist", jsonList.get(i).get("artists").get(0).get("name").asText());
+                tempObject.put("artist_id", jsonList.get(i).get("artists").get(0).get("id").asText());
+                tempObject.put("track_img", jsonList.get(i).get("album").get("images").get(0).get("url").asText());
                 tempObject.put("track_url", jsonList.get(i).get("external_urls").get("spotify").asText());
                 resultObject.put(tempObject);
             }
@@ -245,7 +245,7 @@ public class SpotifyAPIService {
                for (int i = 0; i < jsonList.size(); i++) {
                    JSONObject tempObject = new JSONObject();
                    tempObject.put("track", jsonList.get(i).get("name").asText());
-                   tempObject.put("artists", jsonList.get(i).get("artists").get(0).get("name").asText());
+                   tempObject.put("artist", jsonList.get(i).get("artists").get(0).get("name").asText());
                    tempObject.put("track_img", jsonList.get(i).get("album").get("images").get(0).get("url").asText());
                    tempObject.put("track_url", jsonList.get(i).get("external_urls").get("spotify").asText());
                    resultObject.put(tempObject);
