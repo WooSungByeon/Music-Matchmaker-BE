@@ -248,6 +248,7 @@ public class SpotifyAPIService {
                    tempObject.put("artist", jsonList.get(i).get("artists").get(0).get("name").asText());
                    tempObject.put("track_img", jsonList.get(i).get("album").get("images").get(0).get("url").asText());
                    tempObject.put("track_url", jsonList.get(i).get("external_urls").get("spotify").asText());
+                   tempObject.put("preview_url", jsonList.get(i).get("preview_url").asText());
                    resultObject.put(tempObject);
                }
             }
