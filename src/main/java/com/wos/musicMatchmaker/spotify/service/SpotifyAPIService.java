@@ -22,6 +22,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,11 +54,12 @@ public class SpotifyAPIService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        String auth = SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET;
+        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+        headers.set("Authorization", "Basic " + encodedAuth);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "client_credentials");
-        body.add("client_id", SPOTIFY_CLIENT_ID);
-        body.add("client_secret", SPOTIFY_CLIENT_SECRET);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
         try{
@@ -102,11 +104,12 @@ public class SpotifyAPIService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        String auth = SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET;
+        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+        headers.set("Authorization", "Basic " + encodedAuth);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", spotifyAuthDTO.getGrantType());
-        body.add("client_id", SPOTIFY_CLIENT_ID);
-        body.add("client_secret", SPOTIFY_CLIENT_SECRET);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
         try{
